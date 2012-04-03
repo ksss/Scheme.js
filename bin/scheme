@@ -1,0 +1,20 @@
+#! /usr/bin/env node
+
+var fs = require('fs');
+var util = require('util');
+var Scheme = require("../scheme.js").Scheme;
+var scm = new Scheme();
+var source = process.argv[2];
+
+fs.readFile(source, function (error, code) {
+	var text;
+	if (error) process.exit(1);
+	text = code.toString();
+	text = text.replace(/^#.*?\n/g, '');
+	try {
+		scmtext = scm.eval(text);
+		console.log(util.inspect(scmtext, true, null));
+	} catch (ex) {
+		console.log(ex);
+	}
+});
