@@ -2,19 +2,20 @@
 
 var fs = require('fs');
 var util = require('util');
-var Scheme = require("../scheme.js").Scheme;
-var scm = new Scheme();
+var Scheme = require("../lib/scheme.js").Scheme;
 var source = process.argv[2];
+var pp = function (obj) {
+	console.log('\n# pp');
+	console.log(util.inspect(obj, true, null));
+	console.log();
+};
 
 fs.readFile(source, function (error, code) {
-	var text;
+	var scm, ret, text;
 	if (error) process.exit(1);
 	text = code.toString();
 	text = text.replace(/^#.*?\n/g, '');
-	try {
-		scmtext = scm.eval(text);
-		console.log(util.inspect(scmtext, true, null));
-	} catch (ex) {
-		console.log(ex);
-	}
+		scm = new Scheme(text);
+		ret = scm.run();
+		console.log(util.inspect(ret, true, null));
 });
