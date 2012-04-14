@@ -10,25 +10,45 @@ var run = function () {
 		var scm = new Scheme(src);
 		test.ok(name + " " + src, scm.run(), ans);
 	}
-		
-	it("simple plus", "(+ 1 2)", 3);
-	it("one nesting ", "(+ (+ 3 4) 1)", 8);
-	it("multiple nest ", "(+ 1 (+ 2 (+ 3 (+ 4 5))))", 15);
+
+	it("simple", "(+ 1 2)", 3);
+	it("simple", "(- 1 2)", -1);
+	it("simple", "(* 1 2)", 2);
+	it("simple", "(/ 1 2)", 0.5);
+	it("no arguments", "(+)", 0);
+	it("no arguments", "(*)", 1);
+	it("one arguments", "(+ 1)", 1);
+	it("one arguments", "(- 1)", 1);
+	it("one arguments", "(* 1)", 1);
+	it("one arguments", "(/ 1)", 1);
+	it("one nesting ", "(+ (+ 3 4) 3)", 10);
+	it("one nesting ", "(- (- 3 4) 3)", -4);
+	it("one nesting ", "(* (* 3 4) 3)", 36);
+	it("one nesting ", "(/ (/ 3 4) 3)", 0.25);
+	it("multiple nest ", "(+ 1 (+ 8 (+ 9 (+ 10 11))))", 39);
+	it("multiple nest ", "(- 1 (- 2 (- 3 (- 4 5))))", 3);
+	it("multiple nest ", "(* 1 (* 2 (* 3 (* 4 5))))", 120);
+	it("multiple nest ", "(/ 1 (/ 2 (/ 3 (/ 4 5))))", 1.875);
 	it("serial list ", "(+ 1 2 3 4 5)", 15);
-	it("nest and serial ", "(+ (+ 3 4) (+ 5 6) (+ 0 9))", 27);
-	it("simple plus", "(/ 4 2)", 2);
-	it("one nesting ", "(- (* 3 4) 1)", 11);
-	it("multiple nest ", "(* 1 (/ 2 (+ 3 (- 4 5))))", 1); // TODO
+	it("serial list ", "(- 1 2 3 4 5)", -13);
 	it("serial list ", "(* 1 2 3 4 5)", 120);
-	it("nest and serial ", "(/ (* 3 4) (- 5 2) (+ 0 2))", 2); // TODO
+	it("serial list ", "(/ 16 8 4 2 1)", 0.25);
+	it("nest and serial ", "(+ (+ 3 4) (+ 5 6) (+ 1 9))", 28); // TODO
+	it("nest and serial ", "(- (- 3 4) (- 5 6) (- 1 9))", 8); // TODO
+	it("nest and serial ", "(* (* 3 4) (* 5 6) (* 1 9))", 3240); // TODO
+	it("nest and serial ", "(/ (/ 3 4) (/ 5 6) (/ 1 9))", 8.1); //TODO
+	it("multiple nest ", "(* 1 (/ 2 (+ 3 (- 4 5))))", 1);
+	it("deep nest", "(+ (+ 6 (+ 1 2)) 4)", 13);
+
+	it("deep nest and serial ", "(- (* (+ 1000 9) (/ 8 (/ 5 0.1 10) 0.1) (- 41 (* 2 (+ 1) 3) 8 (+ 2 3 4))) (- 5 2) (+ 0 2) 1 2 3 4 5 5 6)", 290561); // TODO
 };
 
 var test = new function () {
 	this.ok = function (name, l, r) {
 		if (l === r) {
-			console.log(name + " -> \'" + l + "\' ok");
+			console.log(name + " -> " + l + "  :ok");
 		} else {
-			console.log(name + " -> not ok");
+			console.log(name + " -> #####  ng  #####");
 			console.log("# " + l);
 			console.log("# " + r);
 		}
@@ -62,10 +82,8 @@ var nn = function (n) {
 	if (1 < n)
 		arguments.callee(n - 1);
 }
-
 try {
 	run();
 } catch (ex) {
 	pp(ex);
-	nn(5);
 }

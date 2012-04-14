@@ -7,8 +7,14 @@ this.test = test = new function () {
 	this.run = function () {
 		var scm;
 
+		scm = new Scheme("(+)");
+		test.is(scm.src, scm.data, {
+			car: '+',
+			cdr:null
+		});
+
 		scm = new Scheme("(cons 1  2)");
-		test.is("simple perse " + scm.src, scm.perse(), {
+		test.is("simple perse " + scm.src, scm.data, {
 			car: "cons",
 			cdr: {
 				car: 1,
@@ -24,7 +30,7 @@ this.test = test = new function () {
 		}});
 
 		scm = new Scheme("(cons (list 3 4) 1)");
-		test.is( "one nesting " + scm.src, scm.perse(), {
+		test.is( "one nesting " + scm.src, scm.data, {
 			car: "cons",
 			cdr: {
 				car: {
@@ -42,30 +48,76 @@ this.test = test = new function () {
 					cdr: null,
 		}}});
 
+		scm = new Scheme("(+ (+ 6 (+ 1 2)) 4)");
+		test.is( "more nest" + scm.src, scm.data, {
+			car: "+",   // 13
+			cdr: {
+				car: {   // 9
+					car: '+',
+					cdr: {
+						car: 6,
+						cdr: {
+							car: {  // 3
+								car: '+',
+								cdr: {
+									car: 1,
+									cdr: {
+										car: 2,
+										cdr: null
+									}
+								}
+							},
+							cdr: null
+						}
+					}
+				},
+				cdr: {
+					car: 4,
+					cdr: null
+				}
+			}
+		});
+
+
 		scm = new Scheme("(a 1 (b 2 (c 3 (d 4 5))))");
-		test.is("multiple nest " + scm.src, scm.perse(), {
+		test.is("multiple nest " + scm.src, scm.data, {
 			car: 'a',
 			cdr: {
 				car: 1,
 				cdr: {
-					car: 'b',
-					cdr: {
-						car: 2,
+					car: {
+						car: 'b',
 						cdr: {
-							car: 'c',
+							car: 2,
 							cdr: {
-								car: 3,
-								cdr: {
-									car: 'd',
+								car: {
+									car: 'c',
 									cdr: {
-										car: 4,
+										car: 3,
 										cdr: {
-											car: 5,
-											cdr: null,
-		}}}}}}}}});
+											car: {
+												car: 'd',
+												cdr: {
+													car: 4,
+													cdr: {
+														car: 5,
+														cdr: null,
+													}
+												}
+											},
+											cdr: null
+										}
+									}
+								},
+								cdr: null
+							}
+						}
+					},
+					cdr: null
+		}}});
 
 		scm = new Scheme("(list 1 2 3 4 5)");
-		test.is("serial list " + scm.src, scm.perse(), {
+		test.is("serial list " + scm.src, scm.data, {
 			car: "list",
 			cdr: {
 				car: 1,
@@ -81,10 +133,10 @@ this.test = test = new function () {
 		}}}}}});
 		
 		scm = new Scheme("(foo (bar 3 4) (baz 5 6) (hoge 0 9))");
-		test.is("nest and serial " + scm.src, scm.perse(), {
+		test.is("nest and serial " + scm.src, scm.data, {
 			car: 'foo',
 			cdr: {
-				car: {
+				car: { // (bar 3 4)
 					car: 'bar',
 					cdr: {
 						car: 3,
@@ -95,7 +147,7 @@ this.test = test = new function () {
 					}
 				},
 				cdr: {
-					car: {
+					car: { // (baz 5 6)
 						car: 'baz',
 						cdr: {
 							car: 5,
@@ -106,13 +158,19 @@ this.test = test = new function () {
 						}
 					},
 					cdr: {
-						car: 'hoge',
-						cdr: {
-							car: 0,
+						car: {
+							car: 'hoge',
 							cdr: {
-								car: 9,
-								cdr: null,
-		}}}}}});
+								car: 0,
+								cdr: {
+									car: 9,
+									cdr: null
+						}}},
+						cdr: null
+					}
+				}
+			}
+		});
 	};
 
 	this.ok = function (name, l, r) {
@@ -130,8 +188,8 @@ this.test = test = new function () {
 			console.log(name + " -> is ok");
 		} else {
 			console.log(name + " -> not ok");
-			console.log("# " + util.inspect(got, true, 5));
-			console.log("# " + util.inspect(expected, true, 5));
+			console.log("# " + util.inspect(got, true, null));
+			console.log("# " + util.inspect(expected, true, null));
 		}
 	};
 };
