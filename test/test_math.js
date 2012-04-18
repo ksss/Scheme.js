@@ -40,7 +40,7 @@ Test.run(function () {
 	it("full", "(- (* (+ 1e+3 9) (/ 8 (/ 5 .1 1e+1) 1e-1) (- 41 (* 2 (+ 1) 3) 8 (+ 2 3 4))) (- 5 2) (+ 0 2) 1 2 3 4 5 5 (/ .6 .1))", 290561);
 	it("big num", "(* 1e+1 1e+41)", 1e+42);
 
-	ok("double cons", (new Scheme()).eval("(+ 300 10) (+ 1 2)"), 3);
+	ok("double cons", (new Scheme()).eval("(+ 300 10)    (+ 1 2)"), 3);
 
 }, true).error(function(ex){
 	console.log(ex);

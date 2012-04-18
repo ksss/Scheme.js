@@ -12,7 +12,7 @@ Test.run(function () {
 
 	it("simple", "(define TEST 10) (+ TEST 2)", 12);
 	it("space, tab, and feed line", "(define   TEST 10)\n(+ TEST	2)", 12);
-	// TODO it("lambda", "(define pow (lambda (x) (* x x))) (pow 3)", 9)
+	it("lambda", "(define pow (lambda (x) (* x x))) (pow 3)", 9)
 }, 1).error(function(ex){
 	console.log(ex);
 });

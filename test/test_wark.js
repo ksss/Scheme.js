@@ -6,17 +6,14 @@ var Wark = require('../lib/wark.js').Wark;
 Test.run(function () {
 	Wark.run("abcdefg", function (w) {
 		ok("start", w.ch, 'a');
-		ok("next", w.next('a'), 'b');
+		ok("next", w.next(), 'b');
 		ok("ch", w.ch, 'b');
 		ok("next", w.next(), 'c');
-		ok("ch", w.ch, 'c');
 		ok("next", w.next(), 'd');
-		ok("ch", w.ch, 'd');
-		ok("next", w.next(), 'e');
-		ok("ch", w.ch, 'e');
-		ok("next", w.next(), 'f');
-		ok("ch", w.ch, 'f');
-		ok("next", w.next(), 'g');
+		ok("back", w.back(), 'c');
+		ok("back", w.back(), 'b');
+		ok("back", w.back(), 'a');
+		ok("to", w.to('g'), 'g');
 		ok("ch", w.ch, 'g');
 	});
 });
